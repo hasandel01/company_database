@@ -47,7 +47,7 @@ namespace CompanyDatabase.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddProduct(Issue issue)
+        public async Task<IActionResult> AddIssue(Issue issue)
         {
             _context.Issues.Add(issue);
             await _context.SaveChangesAsync();

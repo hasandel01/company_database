@@ -8,21 +8,39 @@ namespace CompanyDatabase.Database
         public CompanyDbContext(DbContextOptions options): 
             base(options) { }
 
-        public DbSet<Company> Companies { get; set; }
+        public DbSet<Customer> Customers { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Issue> Issues { get; set; }
-
+        public DbSet<Branch> Branches { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderProduct> OrderProducts { get; set; }
+        public DbSet<Stock> Stocks { get; set; }
+        public DbSet<Store> Stores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Company - Product (One to Many)
-            modelBuilder.Entity<Product>()
-                .HasOne(p => p.Company)
-                .WithMany(c => c.Products)
-                .HasForeignKey(p => p.CompanyId)
-                .OnDelete(DeleteBehavior.Restrict);
+            // Customer - Orders (One to Many)
+            modelBuilder.Entity<Customer>()
+                .HasMany(c => c.Orders)
+                .WithOne(o => o.Customer)
+                .HasForeignKey(o => o.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Order- Products (Many to Many with Quantity)
+            modelBuilder.Entity<OrderProduct>()
+                .HasKey(op => new { op.OrderId, op.ProductId });
+
+            modelBuilder.Entity<OrderProduct>()
+                .HasOne(op => op.Order)
+                .WithMany(o => o.OrderProducts)
+                .HasForeignKey(op => op.OrderId);
+
+            modelBuilder.Entity<OrderProduct>()
+                .HasOne(op => op.Product)
+                .WithMany(p => p.OrderProducts)
+                .HasForeignKey(op => op.ProductId);
 
             // Product - Issues (One to Many)
             modelBuilder.Entity<Product>()
@@ -31,7 +49,6 @@ namespace CompanyDatabase.Database
                 .HasForeignKey(i => i.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
             // Category - Product (One to Many)
             modelBuilder.Entity<Category>()
                 .HasMany(c => c.Products)
@@ -39,15 +56,46 @@ namespace CompanyDatabase.Database
                 .HasForeignKey(p => p.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
-            modelBuilder.Entity<Company>()
+            // Branch - Employee (One to Many)
+            modelBuilder.Entity<Branch>()
                 .HasMany(c => c.Employees)
-                .WithOne(e => e.Company)
-                .HasForeignKey(e => e.CompanyId)
+                .WithOne(e => e.Branch)
+                .HasForeignKey(e => e.BranchId)
                 .OnDelete(DeleteBehavior.Restrict);
-     
 
-                base.OnModelCreating(modelBuilder);
+            // Branch - Order (One to Many)
+            modelBuilder.Entity<Branch>()
+                .HasMany(b => b.Orders)
+                .WithOne(o => o.Branch)
+                .HasForeignKey(b => b.BranchId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Store - Store (Self referencing)
+            modelBuilder.Entity<Store>()
+                .HasOne(s => s.ParentStore)
+                .WithMany(s => s.ChildStores)
+                .HasForeignKey(s => s.ParentStoreId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Product - Stock (One to Many)
+            modelBuilder.Entity<Product>()
+                .HasKey(p => p.Id);
+
+            modelBuilder.Entity<Product>()
+                .HasMany(p => p.Stocks)
+                .WithOne(st => st.Product)
+                .HasForeignKey(st => st.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure the Stock entity
+            modelBuilder.Entity<Stock>()
+                .HasKey(st => st.Id);
+
+            modelBuilder.Entity<Stock>()
+                .HasIndex(st => new { st.ProductId, st.StoreId })
+                .IsUnique();
+
+            base.OnModelCreating(modelBuilder);
         }
 
     }

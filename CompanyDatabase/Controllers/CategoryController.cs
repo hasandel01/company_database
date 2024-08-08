@@ -47,7 +47,7 @@ namespace CompanyDatabase.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddProduct(Category category)
+        public async Task<IActionResult> AddCategory(Category category)
         {
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();

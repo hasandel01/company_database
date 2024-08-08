@@ -10,31 +10,31 @@ namespace CompanyDatabase.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CompanyController : ControllerBase
+    public class CustomerController : ControllerBase
     {
 
         private readonly CompanyDbContext _context;
 
-        public CompanyController(CompanyDbContext context)
+        public CustomerController(CompanyDbContext context)
         {
             _context = context;
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCompany(Company company)
+        public async Task<IActionResult> AddCustomer(Customer customer)
         {
-            _context.Companies.Add(company);
+            _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(Get), new { id = company.Id }, company);
+            return CreatedAtAction(nameof(Get), new { id = customer.Id }, customer);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var companies = await _context.Companies.ToListAsync();
+            var customers = await _context.Customers.ToListAsync();
 
-            return Ok(companies);
+            return Ok(customers);
         }
 
         [HttpGet("{id}")]
@@ -42,14 +42,14 @@ namespace CompanyDatabase.Controllers
         {
             try
             {
-                var company = await _context.Companies.FindAsync(id);
+                var customer = await _context.Customers.FindAsync(id);
 
-                if (company == null)
+                if (customer == null)
                 {
                     throw new Exception("Element is not in the db?");
                 }
 
-                return Ok(company);
+                return Ok(customer);
 
             }
             catch (Exception ex)
@@ -66,12 +66,12 @@ namespace CompanyDatabase.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var company = await _context.Companies.FindAsync(id);
+            var customer = await _context.Customers.FindAsync(id);
 
-            if(company == null) 
+            if(customer == null) 
                 return NotFound();
 
-            _context.Companies.Remove(company);
+            _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
             
             return Ok("Item is deleted."); ;
@@ -79,20 +79,20 @@ namespace CompanyDatabase.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Company company)
+        public async Task<IActionResult> Put(int id, Customer customer)
         {
-            var existingCompany = await _context.Companies.FindAsync(id);
+            var existingCustomer = await _context.Customers.FindAsync(id);
 
-            if (existingCompany == null)
-                return NotFound(company);
-            existingCompany.PhoneNumber = company.PhoneNumber;
-            existingCompany.Name = company.Name;
-            existingCompany.Address = company.Address;
-            existingCompany.Products = company.Products;
-            existingCompany.Description = company.Description;
-            existingCompany.Employees = company.Employees;
+            if (existingCustomer == null)
+                return NotFound(customer);
 
-            _context.Companies.Update(existingCompany);
+            existingCustomer.Phone = customer.Phone;
+            existingCustomer.Name = customer.Name;
+            existingCustomer.Address = customer.Address;
+            existingCustomer.City = customer.City;
+            existingCustomer.Orders = customer.Orders;
+
+            _context.Customers.Update(existingCustomer);
             await _context.SaveChangesAsync();
 
             return Ok("Item is updated");

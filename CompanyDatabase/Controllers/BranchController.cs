@@ -8,12 +8,11 @@ namespace CompanyDatabase.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeeController : ControllerBase
+    public class BranchController : ControllerBase
     {
-
         private readonly CompanyDbContext _context;
 
-        public EmployeeController(CompanyDbContext dbContext)
+        public BranchController(CompanyDbContext dbContext)
         {
             _context = dbContext;
         }
@@ -23,12 +22,12 @@ namespace CompanyDatabase.Controllers
         {
             try
             {
-                var employee = await _context.Employees.FindAsync(id);
+                var branch = await _context.Products.FindAsync(id);
 
-                if (employee == null)
+                if (branch == null)
                     throw new Exception("Not found?");
 
-                return Ok(employee);
+                return Ok(branch);
 
             }
             catch (Exception ex)
@@ -42,18 +41,18 @@ namespace CompanyDatabase.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var employees = await _context.Employees.ToListAsync();
-            return Ok(employees);
+            var branches = await _context.Branches.ToListAsync();
+            return Ok(branches);
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> AddEmployee(Employee employee)
+        public async Task<IActionResult> AddBranch(Branch branch)
         {
-            _context.Employees.Add(employee);
+            _context.Branches.Add(branch);
             await _context.SaveChangesAsync();
 
-            return Ok(employee);
+            return Ok(branch);
         }
 
     }

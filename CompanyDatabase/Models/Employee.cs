@@ -1,15 +1,16 @@
-﻿namespace CompanyDatabase.Models
+﻿using Newtonsoft.Json;
+
+namespace CompanyDatabase.Models
 {
     public class Employee
     {
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public int CompanyId { get; set; }
+        public string Phone { get; set; } = string.Empty;
 
-        public Company Company { get; set; }
-
-
+        public int BranchId { get; set; }
+        public Branch Branch { get; set; }
     }
 }
