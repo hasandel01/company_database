@@ -23,7 +23,7 @@ namespace CompanyDatabase.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCustomer(Customer customer)
         {
-            _context.Customers.Add(customer);
+            _context.Customer.Add(customer);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(Get), new { id = customer.Id }, customer);
@@ -32,7 +32,7 @@ namespace CompanyDatabase.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var customers = await _context.Customers.ToListAsync();
+            var customers = await _context.Customer.ToListAsync();
 
             return Ok(customers);
         }
@@ -42,7 +42,7 @@ namespace CompanyDatabase.Controllers
         {
             try
             {
-                var customer = await _context.Customers.FindAsync(id);
+                var customer = await _context.Customer.FindAsync(id);
 
                 if (customer == null)
                 {
@@ -66,12 +66,12 @@ namespace CompanyDatabase.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
+            var customer = await _context.Customer.FindAsync(id);
 
             if(customer == null) 
                 return NotFound();
 
-            _context.Customers.Remove(customer);
+            _context.Customer.Remove(customer);
             await _context.SaveChangesAsync();
             
             return Ok("Item is deleted."); ;
@@ -81,7 +81,7 @@ namespace CompanyDatabase.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, Customer customer)
         {
-            var existingCustomer = await _context.Customers.FindAsync(id);
+            var existingCustomer = await _context.Customer.FindAsync(id);
 
             if (existingCustomer == null)
                 return NotFound(customer);
@@ -92,7 +92,7 @@ namespace CompanyDatabase.Controllers
             existingCustomer.City = customer.City;
             existingCustomer.Orders = customer.Orders;
 
-            _context.Customers.Update(existingCustomer);
+            _context.Customer.Update(existingCustomer);
             await _context.SaveChangesAsync();
 
             return Ok("Item is updated");

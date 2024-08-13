@@ -1,6 +1,5 @@
 ﻿using CompanyDatabase.Database;
 using CompanyDatabase.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +21,7 @@ namespace CompanyDatabase.Controllers
         {
             try
             {
-                var branch = await _context.Products.FindAsync(id);
+                var branch = await _context.Branch.FindAsync(id);
 
                 if (branch == null)
                     throw new Exception("Not found?");
@@ -41,7 +40,7 @@ namespace CompanyDatabase.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var branches = await _context.Branches.ToListAsync();
+            var branches = await _context.Branch.ToListAsync();
             return Ok(branches);
         }
 
@@ -49,7 +48,7 @@ namespace CompanyDatabase.Controllers
         [HttpPost]
         public async Task<IActionResult> AddBranch(Branch branch)
         {
-            _context.Branches.Add(branch);
+            _context.Branch.Add(branch);
             await _context.SaveChangesAsync();
 
             return Ok(branch);

@@ -22,7 +22,7 @@ namespace CompanyDatabase.Controllers
         {
             try
             {
-                var category = await _context.Categories.FindAsync(id);
+                var category = await _context.Category.FindAsync(id);
 
                 if (category == null)
                     throw new Exception("Not found?");
@@ -41,7 +41,7 @@ namespace CompanyDatabase.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var category = await _context.Categories.ToListAsync();
+            var category = await _context.Category.ToListAsync();
             return Ok(category);
         }
 
@@ -49,7 +49,7 @@ namespace CompanyDatabase.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCategory(Category category)
         {
-            _context.Categories.Add(category);
+            _context.Category.Add(category);
             await _context.SaveChangesAsync();
 
             return Ok(category);

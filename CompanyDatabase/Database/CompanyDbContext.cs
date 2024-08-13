@@ -8,16 +8,16 @@ namespace CompanyDatabase.Database
         public CompanyDbContext(DbContextOptions options): 
             base(options) { }
 
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Employee> Employees { get; set; }
-        public DbSet<Issue> Issues { get; set; }
-        public DbSet<Branch> Branches { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderProduct> OrderProducts { get; set; }
-        public DbSet<Stock> Stocks { get; set; }
-        public DbSet<Store> Stores { get; set; }
+        public DbSet<Customer> Customer { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<Category> Category { get; set; }
+        public DbSet<Employee> Employee { get; set; }
+        public DbSet<Issue> Issue { get; set; }
+        public DbSet<Branch> Branch { get; set; }
+        public DbSet<Order> Order { get; set; }
+        public DbSet<OrderProduct> OrderProduct { get; set; }
+        public DbSet<Stock> Stock { get; set; }
+        public DbSet<Store> Store { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

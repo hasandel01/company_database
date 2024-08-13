@@ -1,5 +1,6 @@
 ﻿using CompanyDatabase.Database;
 using CompanyDatabase.Models;
+using CompanyDatabase.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +24,7 @@ namespace CompanyDatabase.Controllers
         {
             try
             {
-                var employee = await _context.Employees.FindAsync(id);
+                var employee = await _context.Employee.FindAsync(id);
 
                 if (employee == null)
                     throw new Exception("Not found?");
@@ -39,21 +40,41 @@ namespace CompanyDatabase.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("branch/{branchId}")]
+        public async Task<IActionResult> GetAll(int branchId)
         {
-            var employees = await _context.Employees.ToListAsync();
+            var employees = await _context.Employee.Where(e => e.BranchId == branchId).ToListAsync();
+
+
+            if (employees == null)
+                return BadRequest();
+
+
             return Ok(employees);
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> AddEmployee(Employee employee)
+        [HttpPost("branch/add/{branchId}")]
+        public async Task<IActionResult> AddEmployee(int branchId, [FromBody] EmployeeDTO employeeDTO)
         {
-            _context.Employees.Add(employee);
+            var branchExists = await _context.Branch.AnyAsync(b => b.Id ==  branchId);
+
+            if (branchExists == false)
+                return BadRequest("No branch is matched.");
+
+
+            var employee = new Employee
+            {
+                Name = employeeDTO.Name,
+                Phone = employeeDTO.Phone,
+                BranchId = branchId,
+            };
+
+            _context.Employee.Add(employee);
             await _context.SaveChangesAsync();
 
             return Ok(employee);
+ 
         }
 
     }

@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CompanyDatabase.Database;
 using CompanyDatabase.Models;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace CompanyDatabase.Controllers
 {
@@ -17,18 +20,24 @@ namespace CompanyDatabase.Controllers
             _context = dbContext;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        // Other actions...
+
+        // New action to get products by order ID
+        [HttpGet("order/{orderId}")]
+        public async Task<IActionResult> GetProductsByOrderId(int orderId)
         {
             try
             {
-                var product = await _context.Products.FindAsync(id);
+                var orderProducts = await _context.OrderProduct
+                    .Where(op => op.OrderId == orderId)
+                    .Include(op => op.Product) // Include product details
+                    .Select(op => op.Product)
+                    .ToListAsync();
 
-                if (product == null)
-                    throw new Exception("Not found?");
+                if (orderProducts == null || !orderProducts.Any())
+                    return NotFound("No products found for this order");
 
-                return Ok(product);
-
+                return Ok(orderProducts);
             }
             catch (Exception ex)
             {
@@ -36,25 +45,5 @@ namespace CompanyDatabase.Controllers
                 return BadRequest(ex.ToString());
             }
         }
-
-
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var products = await _context.Products.ToListAsync();
-            return Ok(products);
-        }
-
-
-        [HttpPost]
-        public async Task<IActionResult> AddProduct(Product product)
-        {
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
-
-            return Ok(product);
-        }
-
-
     }
 }

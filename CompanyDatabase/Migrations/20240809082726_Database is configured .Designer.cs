@@ -4,6 +4,7 @@ using CompanyDatabase.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyDatabase.Migrations
 {
     [DbContext(typeof(CompanyDbContext))]
-    partial class CompanyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240809082726_Database is configured ")]
+    partial class Databaseisconfigured
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +43,7 @@ namespace CompanyDatabase.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Branch");
+                    b.ToTable("Branches");
                 });
 
             modelBuilder.Entity("CompanyDatabase.Models.Category", b =>
@@ -57,7 +60,7 @@ namespace CompanyDatabase.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("CompanyDatabase.Models.Customer", b =>
@@ -86,7 +89,7 @@ namespace CompanyDatabase.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("CompanyDatabase.Models.Employee", b =>
@@ -112,7 +115,7 @@ namespace CompanyDatabase.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("Employee");
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("CompanyDatabase.Models.Issue", b =>
@@ -144,7 +147,7 @@ namespace CompanyDatabase.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Issue");
+                    b.ToTable("Issues");
                 });
 
             modelBuilder.Entity("CompanyDatabase.Models.Order", b =>
@@ -180,7 +183,7 @@ namespace CompanyDatabase.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("CompanyDatabase.Models.OrderProduct", b =>
@@ -198,7 +201,7 @@ namespace CompanyDatabase.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderProduct");
+                    b.ToTable("OrderProducts");
                 });
 
             modelBuilder.Entity("CompanyDatabase.Models.Product", b =>
@@ -227,7 +230,7 @@ namespace CompanyDatabase.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Product");
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("CompanyDatabase.Models.Stock", b =>
@@ -254,7 +257,7 @@ namespace CompanyDatabase.Migrations
                     b.HasIndex("ProductId", "StoreId")
                         .IsUnique();
 
-                    b.ToTable("Stock");
+                    b.ToTable("Stocks");
                 });
 
             modelBuilder.Entity("CompanyDatabase.Models.Store", b =>
@@ -277,7 +280,7 @@ namespace CompanyDatabase.Migrations
 
                     b.HasIndex("ParentStoreId");
 
-                    b.ToTable("Store");
+                    b.ToTable("Stores");
                 });
 
             modelBuilder.Entity("CompanyDatabase.Models.Employee", b =>
