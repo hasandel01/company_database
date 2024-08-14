@@ -13,5 +13,7 @@
         public Customer Customer { get; set; }
         public ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
 
+        public ICollection<Issue> Issues { get; set; } = new List<Issue>();
+
     }
 }

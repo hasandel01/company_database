@@ -52,7 +52,7 @@ namespace CompanyDatabase.Controllers
             try
             {
                 var issues = await _context.Issue
-                    .Where(i => i.ProductId == productId).ToListAsync();
+                    .Where(i => i.OrderId == productId).ToListAsync();
 
                 if (issues == null || !issues.Any())
                     return NotFound();
@@ -66,11 +66,11 @@ namespace CompanyDatabase.Controllers
             }
         }
 
-        [HttpPost("product/add/{productId}")]
-        public async Task<IActionResult> AddIssueToProduct(int productId, [FromBody] IssueDTO issueDto)
+        [HttpPost("order/add/{orderId}")]
+        public async Task<IActionResult> AddIssueToProduct(int orderId, [FromBody] IssueDTO issueDto)
         {
             // Check if the product exists
-            var productExists = await _context.Product.AnyAsync(p => p.Id == productId);
+            var productExists = await _context.Product.AnyAsync(p => p.Id == orderId);
             if (!productExists)
             {
                 return NotFound("Product not found");
@@ -82,7 +82,7 @@ namespace CompanyDatabase.Controllers
                 Title = issueDto.Title,
                 Description = issueDto.Description,
                 ReportedDate = issueDto.ReportedDate,
-                ProductId = productId,
+                OrderId = orderId,
             };
 
             // Add the issue to the database

@@ -3,10 +3,11 @@ using CompanyDatabase.Models;
 
 namespace CompanyDatabase.Database
 {
-    public class CompanyDbContext: DbContext
+    public class CompanyDbContext : DbContext
     {
-        public CompanyDbContext(DbContextOptions options): 
-            base(options) { }
+        public CompanyDbContext(DbContextOptions<CompanyDbContext> options) :
+            base(options)
+        { }
 
         public DbSet<Customer> Customer { get; set; }
         public DbSet<Product> Product { get; set; }
@@ -28,7 +29,7 @@ namespace CompanyDatabase.Database
                 .HasForeignKey(o => o.CustomerId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Order- Products (Many to Many with Quantity)
+            // Order - Products (Many to Many with Quantity)
             modelBuilder.Entity<OrderProduct>()
                 .HasKey(op => new { op.OrderId, op.ProductId });
 
@@ -42,12 +43,16 @@ namespace CompanyDatabase.Database
                 .WithMany(p => p.OrderProducts)
                 .HasForeignKey(op => op.ProductId);
 
-            // Product - Issues (One to Many)
-            modelBuilder.Entity<Product>()
-                .HasMany(p => p.Issues)
-                .WithOne(i => i.Product)
-                .HasForeignKey(i => i.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
+            // Order - Issues (One to Many)
+            modelBuilder.Entity<Order>()
+                .HasMany(o => o.Issues)
+                .WithOne(i => i.Order)
+                .HasForeignKey(i => i.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Remove previous Product - Issues (One to Many) configuration
+            modelBuilder.Entity<Order>()
+                .Ignore(o => o.Issues);  // Ignore the issues collection if previously configured
 
             // Category - Product (One to Many)
             modelBuilder.Entity<Category>()
@@ -58,7 +63,7 @@ namespace CompanyDatabase.Database
 
             // Branch - Employee (One to Many)
             modelBuilder.Entity<Branch>()
-                .HasMany(c => c.Employees)
+                .HasMany(b => b.Employees)
                 .WithOne(e => e.Branch)
                 .HasForeignKey(e => e.BranchId)
                 .OnDelete(DeleteBehavior.Restrict);
@@ -67,7 +72,7 @@ namespace CompanyDatabase.Database
             modelBuilder.Entity<Branch>()
                 .HasMany(b => b.Orders)
                 .WithOne(o => o.Branch)
-                .HasForeignKey(b => b.BranchId)
+                .HasForeignKey(o => o.BranchId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Store - Store (Self referencing)
@@ -97,7 +102,5 @@ namespace CompanyDatabase.Database
 
             base.OnModelCreating(modelBuilder);
         }
-
     }
-  
 }

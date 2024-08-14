@@ -29,12 +29,20 @@ namespace CompanyDatabase.Controllers
             return CreatedAtAction(nameof(Get), new { id = customer.Id }, customer);
         }
 
+        // Action to get all customers
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetCustomers()
         {
-            var customers = await _context.Customer.ToListAsync();
-
-            return Ok(customers);
+            try
+            {
+                var customers = await _context.Customer.ToListAsync();
+                return Ok(customers);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return BadRequest(ex.ToString());
+            }
         }
 
         [HttpGet("{id}")]

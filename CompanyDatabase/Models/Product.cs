@@ -20,8 +20,6 @@ namespace CompanyDatabase.Models
  
         public ICollection<OrderProduct> OrderProducts { get; set; }
 
-        public ICollection<Issue> Issues { get; set; } = new List<Issue>();
-
         public ICollection<Stock> Stocks { get; set; } = new List<Stock>();
 
     }

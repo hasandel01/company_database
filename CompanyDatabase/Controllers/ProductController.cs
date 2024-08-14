@@ -20,7 +20,21 @@ namespace CompanyDatabase.Controllers
             _context = dbContext;
         }
 
-        // Other actions...
+        // Action to get all products
+        [HttpGet]
+        public async Task<IActionResult> GetProducts()
+        {
+            try
+            {
+                var products = await _context.Product.ToListAsync();
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return BadRequest(ex.ToString());
+            }
+        }
 
         // New action to get products by order ID
         [HttpGet("order/{orderId}")]

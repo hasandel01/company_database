@@ -3,6 +3,7 @@ using CompanyDatabase.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using CompanyDatabase.DTOs;
 
 namespace CompanyDatabase.Controllers
 {
@@ -65,12 +66,47 @@ namespace CompanyDatabase.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddOrder(Order order)
+        public async Task<IActionResult> AddOrder([FromBody] OrderRequest orderRequest)
         {
-            _context.Order.Add(order);
-            await _context.SaveChangesAsync();
+            try
+            {
+                // Create a new order
+                var order = new Order
+                {
+                    OrderDate = DateTime.UtcNow,
+                    DeliveryDate = orderRequest.DeliveryDate,
+                    Status = orderRequest.Status,
+                    CustomerId = orderRequest.CustomerId,
+                    BranchId = orderRequest.BranchId,
+                };
 
-            return Ok(order);
+                _context.Order.Add(order);
+                await _context.SaveChangesAsync();
+
+                // Add order products
+                foreach (var productQuantity in orderRequest.ProductQuantities)
+                {
+                    var orderProduct = new OrderProduct
+                    {
+                        OrderId = order.Id,
+                        ProductId = productQuantity.ProductId,
+                        Quantity = productQuantity.Quantity
+                    };
+
+                    _context.OrderProduct.Add(orderProduct);
+                }
+
+                await _context.SaveChangesAsync();
+
+                return Ok(order);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return BadRequest(ex.ToString());
+            }
         }
+
+
     }
 }
